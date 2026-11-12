@@ -1,0 +1,32 @@
+using Scalar.AspNetCore;
+
+
+//REGISTRACE SLUŽEB - DEPENDENCY INJECTION KENTEJNER
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+
+builder.Services.AddControllers(); // najde všechny kontejnery
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi(); //vygeneruje popis API
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())//pokud běží jen v developmentu
+{
+    app.MapOpenApi(); // /openapi/v1.json
+    app.MapScalarApiReference();
+}
+
+app.UseHttpsRedirection(); // http -> https
+ 
+app.UseAuthorization(); // zatim nic nedela
+
+app.MapControllers(); // url -> pošle to spravné metodě kontroleru
+
+//middleware - požadavek od uživatele -> stanoviště
+//(upravit, zkontrolovat, zahodit, poslat dál)
+//-> stanoviště -> controller (správná metoda) ==> vrátí výsledek
+
+app.Run(); //bez a cekej na pozadavky
